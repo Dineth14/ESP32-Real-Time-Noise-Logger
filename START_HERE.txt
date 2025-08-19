@@ -1,0 +1,19 @@
+🚀 ESP32 NOISE LOGGER - START HERE 🚀
+==========================================
+
+EASY 2-STEP SETUP:
+
+1. 📦 SETUP (First time only):
+   ➤ Double-click: setup.bat
+
+2. 🎯 RUN THE GUI:
+   ➤ Double-click: run_gui.bat
+
+That's it! 🎉
+
+For detailed instructions: Open HOW_TO_RUN.md
+
+TROUBLESHOOTING:
+- If setup.bat fails: Install Python from python.org
+- If run_gui.bat fails: Run setup.bat first
+- For other issues: Check HOW_TO_RUN.md
