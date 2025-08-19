@@ -1,9 +1,15 @@
+# ESP32 Real-Time Noise Logger - Audio Specs
+
+**Author:** Dineth Perera
+
+**License:** MIT License (see LICENSE file)
+
 # ESP32 Audio Processing - Technical Specifications
 
 ## Audio Processing Improvements
 
 ### Sampling Rate Upgrade
-- **Previous**: 8 kHz sampling rate (4 kHz bandwidth)
+
 - **Current**: 30 kHz sampling rate (15 kHz bandwidth)
 - **Benefit**: Captures full human audible range up to 15 kHz (Nyquist compliant)
 

@@ -1,3 +1,9 @@
+# ESP32 Real-Time Noise Logger - How to Run
+
+**Author:** Dineth Perera
+
+**License:** MIT License (see LICENSE file)
+
 # ESP32 Noise Logger - How to Run
 
 ## 🚀 Quick Start (Easiest Method)

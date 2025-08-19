@@ -1,3 +1,9 @@
+# ESP32 Real-Time Noise Logger - Visual Flow
+
+**Author:** Dineth Perera
+
+**License:** MIT License (see LICENSE file)
+
 # ESP32 Noise Logger - Visual System Flow
 
 ## System Architecture Overview

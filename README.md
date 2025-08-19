@@ -1,3 +1,9 @@
+# ESP32 Real-Time Noise Logger
+
+**Author:** Dineth Perera
+
+**License:** MIT License (see LICENSE file)
+
 # ESP32 Noise Logger with Offline kNN Classifier
 
 A complete system for real-time audio classification using an ESP32 microcontroller with an offline k-Nearest Neighbors classifier and a Python GUI for monitoring and labeling.

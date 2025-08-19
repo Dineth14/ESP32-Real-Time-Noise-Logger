@@ -5,7 +5,9 @@
 #include <vector>
 #include <math.h>
 
+#ifndef SAMPLE_RATE
 #define SAMPLE_RATE 30000     // 30 kHz sampling rate
+#endif
 #define FRAME_SIZE 1024       // Increased frame size for better frequency resolution
 #define OVERLAP_SIZE 512
 #define NUM_FEATURES 7

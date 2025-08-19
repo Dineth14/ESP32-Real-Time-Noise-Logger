@@ -1,3 +1,9 @@
+# ESP32 Real-Time Noise Logger - System Operation
+
+**Author:** Dineth Perera
+
+**License:** MIT License (see LICENSE file)
+
 # ESP32 Noise Logger - Complete System Operation
 
 ## System Overview
