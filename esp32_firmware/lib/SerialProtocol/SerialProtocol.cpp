@@ -35,7 +35,7 @@ void SerialProtocol::handle_input() {
     }
 }
 
-void SerialProtocol::process_command(const String& command) {
+void SerialProtocol::process_command(String& command) {
     command.trim();
     
     if (command == "GET_STATUS") {
@@ -53,6 +53,8 @@ void SerialProtocol::process_command(const String& command) {
         if (label.length() > 0 && has_new_features) {
             if (classifier.add_sample(last_features, label.c_str())) {
                 send_label_confirmation(label.c_str());
+                // Send updated dataset info after successful labeling
+                send_dataset_info();
             } else {
                 send_error("Failed to add sample");
             }

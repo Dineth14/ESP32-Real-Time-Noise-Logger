@@ -8,15 +8,15 @@
 class SerialProtocol {
 private:
     String input_buffer;
-    void process_command(const String& command);
+    void process_command(String& command);
     void send_features(const AudioFeatures& features, const String& classification, float confidence);
-    void send_status();
     void send_dataset_info();
     
 public:
     SerialProtocol();
     void initialize();
     void handle_input();
+    void send_status();
     void send_classification_result(const AudioFeatures& features, const String& classification, float confidence);
     void send_label_confirmation(const char* label);
     void send_error(const String& error);

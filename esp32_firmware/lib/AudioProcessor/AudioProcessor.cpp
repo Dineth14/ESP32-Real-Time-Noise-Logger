@@ -1,16 +1,11 @@
 #include "AudioProcessor.h"
 #include <algorithm>
 
-AudioProcessor::AudioProcessor() : buffer_index(0) {
+AudioProcessor::AudioProcessor() : buffer_index(0), 
+    high_pass_prev_input(0), high_pass_prev_output(0), low_pass_prev_output(0) {
     audio_buffer.resize(FRAME_SIZE);
     window.resize(FRAME_SIZE);
     prev_spectrum.resize(FRAME_SIZE / 2);
-    
-    // Initialize digital filter state
-    hp_prev_input = 0.0;
-    hp_prev_output = 0.0;
-    lp_prev_input = 0.0;
-    lp_prev_output = 0.0;
 }
 
 void AudioProcessor::initialize() {
@@ -19,31 +14,17 @@ void AudioProcessor::initialize() {
         window[i] = 0.54 - 0.46 * cos(2.0 * PI * i / (FRAME_SIZE - 1));
     }
     
-    // Calculate digital filter coefficients
-    // High-pass filter (1st order): alpha = RC / (RC + dt)
-    float hp_rc = 1.0 / (2.0 * PI * HP_CUTOFF_HZ);
-    float dt = 1.0 / SAMPLE_RATE;
-    hp_alpha = hp_rc / (hp_rc + dt);
-    
-    // Low-pass filter (1st order): alpha = dt / (RC + dt)
-    float lp_rc = 1.0 / (2.0 * PI * LP_CUTOFF_HZ);
-    lp_alpha = dt / (lp_rc + dt);
-    
     // Initialize previous spectrum for flux calculation
     std::fill(prev_spectrum.begin(), prev_spectrum.end(), 0.0);
     buffer_index = 0;
 }
 
 void AudioProcessor::add_sample(int16_t sample) {
-    // Convert to float and normalize (-1.0 to 1.0)
-    float normalized_sample = sample / 32768.0;
-    
-    // Apply digital filters
-    float filtered_sample = apply_high_pass_filter(normalized_sample);
+    // Apply digital filters as per VISUAL_FLOW.md
+    float filtered_sample = apply_high_pass_filter((float)sample);
     filtered_sample = apply_low_pass_filter(filtered_sample);
     
-    // Convert back and store
-    audio_buffer[buffer_index] = (int16_t)(filtered_sample * 32768.0);
+    audio_buffer[buffer_index] = (int16_t)filtered_sample;
     buffer_index = (buffer_index + 1) % FRAME_SIZE;
 }
 
@@ -130,7 +111,7 @@ float AudioProcessor::compute_spectral_centroid(const std::vector<float>& spectr
 }
 
 void AudioProcessor::compute_band_energies(const std::vector<float>& spectrum, float& low, float& mid, float& high) {
-    // Updated frequency bands for 30 kHz sampling (15 kHz Nyquist)
+    // Frequency bands as per VISUAL_FLOW.md for 30 kHz sampling (15 kHz Nyquist)
     int low_end = (2000 * spectrum.size()) / (SAMPLE_RATE / 2);    // 0-2 kHz
     int mid_end = (6000 * spectrum.size()) / (SAMPLE_RATE / 2);    // 2-6 kHz
     // high: 6-15 kHz (rest of spectrum)
@@ -163,19 +144,33 @@ float AudioProcessor::compute_spectral_flux(const std::vector<float>& spectrum) 
 void AudioProcessor::reset_buffer() {
     buffer_index = 0;
     std::fill(audio_buffer.begin(), audio_buffer.end(), 0);
+    
+    // Reset filter states
+    high_pass_prev_input = 0;
+    high_pass_prev_output = 0;
+    low_pass_prev_output = 0;
 }
 
+// Digital filters as per VISUAL_FLOW.md
 float AudioProcessor::apply_high_pass_filter(float input) {
-    // 1st order high-pass filter: y[n] = alpha * (y[n-1] + x[n] - x[n-1])
-    float output = hp_alpha * (hp_prev_output + input - hp_prev_input);
-    hp_prev_input = input;
-    hp_prev_output = output;
+    // 150Hz high-pass filter: y[n] = α(y[n-1] + x[n] - x[n-1])
+    // α = RC / (RC + dt), where RC = 1/(2*π*150) and dt = 1/30000
+    const float alpha = 0.9691f;  // Calculated for 150Hz at 30kHz
+    
+    float output = alpha * (high_pass_prev_output + input - high_pass_prev_input);
+    high_pass_prev_input = input;
+    high_pass_prev_output = output;
+    
     return output;
 }
 
 float AudioProcessor::apply_low_pass_filter(float input) {
-    // 1st order low-pass filter: y[n] = alpha * x[n] + (1-alpha) * y[n-1]
-    float output = lp_alpha * input + (1.0 - lp_alpha) * lp_prev_output;
-    lp_prev_output = output;
+    // 15kHz low-pass filter: y[n] = αx[n] + (1-α)y[n-1]
+    // α = dt / (RC + dt), where RC = 1/(2*π*15000) and dt = 1/30000
+    const float alpha = 0.7596f;  // Calculated for 15kHz at 30kHz
+    
+    float output = alpha * input + (1.0f - alpha) * low_pass_prev_output;
+    low_pass_prev_output = output;
+    
     return output;
 }
