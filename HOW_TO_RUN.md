@@ -4,60 +4,62 @@
 
 **License:** MIT License (see LICENSE file)
 
+
 # ESP32 Noise Logger - How to Run
 
-## 🚀 Quick Start (Easiest Method)
+---
 
-### Option 1: Using Batch Files (Windows)
-1. **First Time Setup**: Double-click `setup.bat`
-2. **Run the GUI**: Double-click `run_gui.bat`
+## 🚀 Quick Start
 
-### Option 2: Manual Commands
-```bash
+### 1. Python GUI (Windows)
+1. Double-click `setup.bat` (first time only)
+2. Double-click `run_gui.bat` to launch the GUI
+
+### 2. Python GUI (Manual/Other OS)
+```powershell
 # First time setup
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-
 # Run the GUI
 .venv\Scripts\python.exe test_gui.py
 ```
 
-## 📋 Detailed Instructions
+---
 
-### Step 1: First Time Setup
-**Option A: Automatic Setup**
-- Double-click `setup.bat` file
-- Wait for it to complete (creates virtual environment and installs packages)
+## �️ Uploading ESP32 Firmware
 
-**Option B: Manual Setup**
-1. Open PowerShell or Command Prompt
-2. Navigate to project folder:
-   ```
-   cd "d:\Projects files\New folder"
-   ```
-3. Create virtual environment:
-   ```
-   python -m venv .venv
-   ```
-4. Install packages:
-   ```
-   .venv\Scripts\python.exe -m pip install -r requirements.txt
-   ```
+1. Open the `esp32_firmware` folder in VS Code with PlatformIO extension installed.
+2. Connect your ESP32 board via USB.
+3. Click the "Upload" button in PlatformIO (checkmark icon) to build and upload the firmware.
+4. Open the PlatformIO Serial Monitor (baud: 115200) to view ESP32 output.
 
-### Step 2: Run the Application
-**Option A: Using Batch File**
-- Double-click `run_gui.bat`
+---
 
-**Option B: Manual Command**
-```
-.venv\Scripts\python.exe test_gui.py
-```
+## 💾 Data Logging & Storage
 
-**Option C: Alternative Method**
-```
-.venv\Scripts\python.exe python_gui/noise_logger_gui.py
-```
+- All labeled data is stored on the ESP32's SPIFFS flash as `/classifier_data.bin`.
+- Data is persistent across power cycles and unplugging.
+- When the sample limit is reached, oldest data is replaced by new samples.
+- The Python GUI does not log data to your PC by default.
+
+---
+
+## ❓ FAQ
+
+**Q: How do I close the GUI?**
+A: Click the X (close) button on the GUI window.
+
+**Q: Do I need Arduino IDE?**
+A: No, use PlatformIO in VS Code for firmware upload.
+
+**Q: Where is my data stored?**
+A: On the ESP32's internal flash (SPIFFS), not on your PC.
+
+**Q: Will my data be lost if I unplug the ESP32?**
+A: No, data is persistent unless you clear it or re-flash/erase the ESP32.
+
+---
 
 ## 🔧 Troubleshooting
 

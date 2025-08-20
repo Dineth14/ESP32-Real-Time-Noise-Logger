@@ -4,60 +4,71 @@
 
 **License:** MIT License (see LICENSE file)
 
+---
 # ESP32 Noise Logger with Offline kNN Classifier
 
-A complete system for real-time audio classification using an ESP32 microcontroller with an offline k-Nearest Neighbors classifier and a Python GUI for monitoring and labeling.
+A complete system for real-time audio classification using an ESP32 microcontroller (offline k-Nearest Neighbors classifier) and a Python GUI for real-time monitoring and labeling.
 
-## 🚀 **Quick Start**
+---
 
-**To run this project:**
+## 🚀 Quick Start
+
 1. Double-click `setup.bat` (first time only)
 2. Double-click `run_gui.bat` (to launch GUI)
+3. For full details, see [`HOW_TO_RUN.md`](HOW_TO_RUN.md)
 
-**For detailed instructions, see:** [`HOW_TO_RUN.md`](HOW_TO_RUN.md)
+---
 
-## Features
+## 📦 Features
 
 ### ESP32 Firmware
-- **High-Quality Audio Processing**: 30 kHz sampling rate (15 kHz bandwidth, Nyquist compliant)
-- **Digital Signal Processing**: Hardware high-pass (150 Hz) and low-pass (15 kHz) filtering
-- **Real-time Feature Extraction**: RMS, Zero Crossing Rate, Spectral Centroid, Band Energies, Spectral Flux
-- **Offline Classification**: k-Nearest Neighbors classifier with incremental learning
-- **Data Persistence**: Save/load training data to/from SPIFFS or SD card
-- **Serial Protocol**: Communication with desktop GUI for monitoring and labeling
-- **Modular Design**: Easy to extend with additional features
+- High-quality audio processing (30 kHz sample rate)
+- Real-time feature extraction (RMS, ZCR, Spectral Centroid, Band Energies, Spectral Flux)
+- Offline kNN classifier with incremental learning
+- Data persistence: saves dataset to ESP32 SPIFFS (non-volatile flash)
+- Serial protocol for communication with desktop GUI
 
 ### Python GUI
-- **Real-time Monitoring**: Live display of audio features and classifications
-- **Interactive Labeling**: Label sounds with predefined or custom categories
-- **Dataset Management**: Save, load, and clear training datasets
-- **Visualization**: Real-time plots of audio features
-- **Communication Log**: Monitor all ESP32 communications
+- Real-time monitoring of audio features and classifications
+- Interactive labeling (predefined/custom labels)
+- Dataset management (save, load, clear via ESP32)
+- Real-time feature visualization
+- Communication log
 
-## Hardware Requirements
+---
 
-### ESP32 Setup
-- ESP32 development board (ESP32-DevKit, NodeMCU-32S, etc.)
-- **Capacitor (Electret) Microphone** (e.g., MAX4466 breakout, or bare electret capsule)
-- Optional: SD card module for extended storage
-- USB cable for programming and serial communication
+## 💾 Data Logging & Storage
+
+- **All labeled data is stored on the ESP32's internal SPIFFS flash** as `/classifier_data.bin`.
+- Data is persistent: unplugging or rebooting the ESP32 does NOT erase the dataset.
+- When the sample limit is reached, the oldest data is replaced by new samples.
+- The Python GUI does NOT log data to your PC by default (can be added if needed).
+
+---
+
+## 🛠️ Hardware Requirements
+
+- ESP32 development board (e.g., ESP32-DevKit, NodeMCU-32S)
+- Capacitor (electret) microphone (e.g., MAX4466 breakout)
+- USB cable for programming/serial
+- (Optional) SD card module for extended storage
 
 ### Microphone Connections
-
-#### Capacitor/Electret Microphone
 ```
 Microphone     ESP32
 VCC        ->  3.3V (or GPIO33 for controlled power)
 GND        ->  GND
 OUT        ->  GPIO34 (ADC1_CH6)
 ```
+*Most electret microphones require a bias voltage (3.3V) and may have a built-in amplifier. MAX4466 is recommended.*
 
-**Note**: Most electret microphones require a bias voltage (provided by 3.3V) and may have a built-in amplifier. The MAX4466 breakout board is recommended as it includes amplification and filtering.
+---
 
-## Quick Start
+## 📋 How to Run
 
-### 1. Setup Python Environment
-```bash
+See [`HOW_TO_RUN.md`](HOW_TO_RUN.md) for full instructions.
+
+---
 # Run the automated setup
 double-click setup.bat
 
