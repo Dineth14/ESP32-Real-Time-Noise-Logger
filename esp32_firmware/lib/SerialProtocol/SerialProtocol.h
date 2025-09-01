@@ -11,6 +11,7 @@ private:
     void process_command(String& command);
     void send_features(const AudioFeatures& features, const String& classification, float confidence);
     void send_dataset_info();
+    void dump_dataset_csv();
     
 public:
     SerialProtocol();

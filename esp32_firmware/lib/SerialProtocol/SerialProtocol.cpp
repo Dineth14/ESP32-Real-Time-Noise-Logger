@@ -83,9 +83,33 @@ void SerialProtocol::process_command(String& command) {
     else if (command == "GET_DATASET") {
         send_dataset_info();
     }
+    else if (command == "DUMP_DATASET") {
+        dump_dataset_csv();
+    }
     else {
         send_error("Unknown command: " + command);
     }
+}
+
+
+// --- Now at file scope ---
+void SerialProtocol::dump_dataset_csv() {
+    // Send all stored samples as CSV lines, then END_DATASET
+    const auto& data = classifier.get_training_data();
+    Serial.print("[DEBUG] DUMP_DATASET sample count: ");
+    Serial.println(data.size());
+    for (const auto& sample : data) {
+        Serial.print(sample.features.rms, 4); Serial.print(",");
+        Serial.print(sample.features.zcr, 4); Serial.print(",");
+        Serial.print(sample.features.spectral_centroid, 2); Serial.print(",");
+        Serial.print(sample.features.low_energy, 4); Serial.print(",");
+        Serial.print(sample.features.mid_energy, 4); Serial.print(",");
+        Serial.print(sample.features.high_energy, 4); Serial.print(",");
+        Serial.print(sample.features.spectral_flux, 4); Serial.print(",");
+        Serial.print(sample.label); Serial.print(",");
+        Serial.println(sample.timestamp);
+    }
+    Serial.println("END_DATASET");
 }
 
 void SerialProtocol::send_features(const AudioFeatures& features, const String& classification, float confidence) {
